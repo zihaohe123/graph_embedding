@@ -283,7 +283,6 @@ class SDNE2:
         epoch_loss_2nd = 0
         self.model.train()
         for _, index in enumerate(self.dataLoader):
-            self.optimizer.zero_grad()
             A = torch.from_numpy(self.A[index].toarray()).to(torch.float)
             L = torch.from_numpy(self.L[index][:, index].toarray()).to(torch.float)
             A = A.to(self.device)
@@ -293,6 +292,7 @@ class SDNE2:
             loss_2nd = self.criterion2(A_, A)
             l1_regula = self.L1_regula()
             loss = loss_1st + loss_2nd + l1_regula
+            self.optimizer.zero_grad()
             loss.backward()
             self.optimizer.step()
             epoch_loss_1st += loss_1st.item()
